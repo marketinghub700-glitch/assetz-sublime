@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -59,6 +59,13 @@ function Index() {
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
@@ -83,15 +90,25 @@ function Index() {
 
   return (
     <main>
-      <section className="relative min-h-[640px] h-[82svh] max-h-[900px]">
+      <header className="fixed inset-x-0 top-0 z-40 px-4 pt-4 lg:px-8">
+        <nav aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-2xl border border-border bg-background/80 px-4 py-3 shadow-lg shadow-black/20 backdrop-blur-md lg:px-6">
+          <a href="#top" className="text-xl font-semibold">assetz<span className="text-primary">.</span></a>
+          <div className="hidden items-center gap-7 text-sm md:flex">
+            {navLinks.map(([label, href]) => <a key={href} href={href} className="text-muted-foreground transition-colors hover:text-foreground">{label}</a>)}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" size="sm" className="hidden border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground sm:inline-flex"><a href="#enquire">Enquire now <ArrowUpRight /></a></Button>
+            <Button variant="outline" size="icon" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground md:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+              {menuOpen ? <X /> : <Menu />}
+            </Button>
+          </div>
+        </nav>
+      </header>
+      <section id="top" className="relative min-h-[640px] h-[82svh] max-h-[900px]">
         <img src={hero.url} alt="Assetz Codename Sublime residential towers and swimming pool — project rendering" className="absolute inset-0 h-full w-full object-cover" />
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-between px-6 py-7 lg:px-12 lg:py-9">
-          <header className="flex items-center justify-between gap-4">
-            <p className="text-xl font-semibold">assetz<span className="text-primary">.</span></p>
-            <Button asChild variant="outline" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground"><a href="#enquire">Enquire now <ArrowUpRight /></a></Button>
-          </header>
-          <div className="pb-8 lg:pb-12">
+        <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-10 pt-28 lg:px-12 lg:pb-14">
+          <div>
             <p className="mb-4 flex items-center gap-2 text-sm"><MapPin className="size-4 text-primary" /> At {project.location}</p>
             <h1 className="max-w-3xl font-display text-5xl font-light leading-[1.05] sm:text-7xl lg:text-8xl">Assetz Codename<br />Sublime</h1>
             <p className="mt-5 text-lg">Luxurious 3 BHK Apartments</p>
@@ -145,7 +162,7 @@ function Index() {
           )}
         </div>
       </section>
-      <section className="bg-card text-card-foreground">
+      <section id="amenities" className="bg-card text-card-foreground">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-20">
           <p className="section-label">A considered lifestyle</p><h2 className="section-title">Project amenities</h2>
           <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-7 md:grid-cols-4">
@@ -164,10 +181,10 @@ function Index() {
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">*Prices are indicative and subject to applicable charges, terms and availability. Please enquire for the latest pricing and cost sheet.</p>
         <Button asChild className="mt-6"><a href="#enquire">Request latest pricing <ArrowUpRight /></a></Button>
       </section>
-      <section className="bg-secondary">
+      <section id="gallery" className="bg-secondary">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-20"><p className="section-label">A closer look</p><h2 className="section-title">Project gallery</h2><div className="mt-9 grid gap-4 md:grid-cols-3">{[hero, gallery2, gallery3].map((image, i) => <Button key={image.url} variant="ghost" className="h-auto overflow-hidden rounded-none p-0" onClick={() => setSelectedImage({ url: image.url, label: `Assetz Codename Sublime — project view ${i + 1}` })} aria-label={`View project gallery image ${i + 1}`}><img src={image.url} loading="lazy" alt={`Assetz Codename Sublime project rendering ${i + 1}`} className="aspect-[4/3] w-full object-cover" /></Button>)}</div><p className="mt-4 text-xs text-muted-foreground">Project images and details from the supplied reference website. Images are illustrative project renderings.</p></div>
       </section>
-      <section className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:gap-24 lg:px-12 lg:py-24">
+      <section id="location" className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:gap-24 lg:px-12 lg:py-24">
         <div><p className="section-label">Everything within reach</p><h2 className="section-title">Location & connectivity</h2><p className="mt-6 flex items-center gap-2 text-primary"><MapPin className="size-5 shrink-0" /> Off Old Madras Road, Hoskote, East Bangalore</p><p className="mt-6 leading-relaxed text-muted-foreground">Convenient access to schools, healthcare, shopping destinations and employment hubs. Connected via Old Madras Road, Bengaluru–Tirupati Highway, Satellite Town Ring Road (STRR) and Kadapa–Bengaluru Highway.</p><p className="mt-5 leading-relaxed text-muted-foreground">Whitefield Railway Station and Whitefield (Kadugodi) Metro Station offer additional travel convenience.</p></div>
         <div><table className="w-full text-left text-sm"><thead className="border-b border-border text-primary"><tr><th className="pb-4 font-medium">Destination</th><th className="pb-4 text-right font-medium">Approx. drive time</th></tr></thead><tbody>{project.destinations.map(([name, time]) => <tr key={name} className="border-b border-border"><td className="py-3 pr-4">{name}</td><td className="whitespace-nowrap py-3 text-right text-muted-foreground">{time}</td></tr>)}</tbody></table><p className="mt-4 text-xs leading-relaxed text-muted-foreground">*Drive times are indicative and may vary with traffic conditions, route and time of day.</p></div>
       </section>
