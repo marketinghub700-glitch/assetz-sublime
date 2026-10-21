@@ -1,4 +1,4 @@
 # Content update
-- [ ] Replace invented content and generated photo with the supplied page's project details and imagery.
-- [ ] Include project overview, amenities, plans, indicative prices and connectivity; retain the enquiry form.
-- [ ] Verify page display and enquiry controls.
+- [x] Replace invented content and generated photo with the supplied page's project details and imagery.
+- [x] Include project overview, amenities, plans, indicative prices and connectivity; retain the enquiry form.
+- [x] Verify page display, loaded images, enquiry validation and plan viewing on desktop and phone sizes.
