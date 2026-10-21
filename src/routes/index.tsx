@@ -190,6 +190,24 @@ function Index() {
       </section>
       <footer className="border-t border-border px-6 py-8"><div className="mx-auto max-w-7xl"><div className="flex flex-wrap items-center justify-between gap-4 text-sm"><p className="font-display text-2xl">Assetz Codename Sublime</p><Button asChild variant="link"><a href="#enquire">Register your interest <ArrowUpRight /></a></Button></div><p className="mt-5 text-xs leading-relaxed text-muted-foreground">Information reproduced from the supplied reference website; not an offer. The source lists project RERA registration as forthcoming. Confirm current registration, approvals and details with the sales team before making a purchase decision.</p></div></footer>
       {selectedImage && <div role="dialog" aria-modal="true" aria-label={selectedImage.label} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 p-6" onClick={() => setSelectedImage(null)}><Button variant="outline" size="icon" aria-label="Close image" autoFocus className="absolute right-5 top-5" onClick={() => setSelectedImage(null)} onKeyDown={(e) => { if (e.key === "Escape") setSelectedImage(null); }}><X /></Button><img src={selectedImage.url} alt={selectedImage.label} className="max-h-[80svh] max-w-full object-contain" /><p className="mt-4 text-sm">{selectedImage.label}</p></div>}
+      {menuOpen && (
+        <div role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-50 flex flex-col bg-background/95 p-6 backdrop-blur-md" onClick={() => setMenuOpen(false)}>
+          <div className="flex items-center justify-between">
+            <p className="text-xl font-semibold">assetz<span className="text-primary">.</span></p>
+            <Button variant="outline" size="icon" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground" aria-label="Close menu" autoFocus onClick={() => setMenuOpen(false)}><X /></Button>
+          </div>
+          <nav aria-label="Mobile navigation" className="mt-12 flex flex-col gap-6">
+            {navLinks.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="font-display text-4xl text-foreground">{label}</a>)}
+          </nav>
+          <div className="mt-auto space-y-3 pb-2">
+            <Button asChild className="h-12 w-full text-sm font-semibold"><a href="#enquire" onClick={() => setMenuOpen(false)}>Enquire now <ArrowUpRight /></a></Button>
+            <Button asChild variant="outline" className="h-12 w-full border-foreground/40 bg-transparent text-sm font-semibold text-foreground hover:bg-foreground/10 hover:text-foreground"><a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><WhatsAppIcon className="size-5" /> WhatsApp us</a></Button>
+          </div>
+        </div>
+      )}
+      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" className="fixed bottom-5 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-whatsapp text-whatsapp-foreground shadow-lg transition-transform hover:scale-105">
+        <WhatsAppIcon className="size-7" />
+      </a>
     </main>
   );
 }
