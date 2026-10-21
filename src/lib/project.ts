@@ -1,0 +1,25 @@
+export const project = {
+  name: "Assetz Codename Sublime",
+  location: "Hoskote, Bangalore",
+  startingPrice: "₹1.84 Cr* Onwards",
+  acres: 11,
+  clubhouseSqFt: 62000,
+  amenities: 30,
+  openSpacePercent: 81,
+  homes: [
+    { area: 1735, price: "₹1.84 Cr – ₹2.02 Cr Onwards" },
+    { area: 1926, price: "₹2.02 Cr – ₹2.20 Cr Onwards" },
+    { area: 1945, price: "₹2.04 Cr – ₹2.22 Cr Onwards" },
+  ],
+  destinations: [
+    ["Old Madras Road (NH-75)", "~5 min"],
+    ["Cloverleaf Interchange", "~5 min"],
+    ["MVJ Hospital", "~4 min"],
+    ["Capstone High CBSE School", "~3 min"],
+    ["The Terminal", "~5 min"],
+    ["Orion Uptown Mall", "~18 min"],
+    ["KR Puram", "~20 min"],
+    ["Whitefield / ITPL", "~25–30 min"],
+    ["Kempegowda International Airport", "~40–50 min"],
+  ],
+};
