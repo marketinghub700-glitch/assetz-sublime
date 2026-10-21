@@ -18,4 +18,8 @@ describe("Source project details", () => {
   it("preserves the airport travel estimate", () => {
     expect(project.destinations.find(([name]) => name === "Kempegowda International Airport")?.[1]).toBe("~40–50 min");
   });
+  it("points the WhatsApp button at the owner's number", () => {
+    expect(project.whatsapp.phone).toBe("919071371005");
+    expect(project.whatsapp.message).toContain("Assetz Codename Sublime");
+  });
 });

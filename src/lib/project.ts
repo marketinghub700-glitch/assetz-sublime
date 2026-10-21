@@ -1,6 +1,11 @@
 export const project = {
   name: "Assetz Codename Sublime",
   location: "Hoskote, Bangalore",
+  // WhatsApp enquiry contact supplied by the owner (Indian number 9071371005).
+  whatsapp: {
+    phone: "919071371005",
+    message: "Hi, I'm interested in Assetz Codename Sublime. Please share more details.",
+  },
   startingPrice: "₹1.84 Cr* Onwards",
   acres: 11,
   clubhouseSqFt: 62000,

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUpRight, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
 import hero from "@/assets/sublime-Gallery-1.webp.asset.json";
 import gallery2 from "@/assets/sublime-Gallery-2.webp.asset.json";
 import gallery3 from "@/assets/sublime-Gallery-3.webp.asset.json";
@@ -33,12 +33,38 @@ const schema = z.object({
   phone: z.string().trim().regex(/^[0-9+ ()-]{7,20}$/, "Enter a valid phone number"),
 });
 
+const whatsappUrl = `https://wa.me/${project.whatsapp.phone}?text=${encodeURIComponent(project.whatsapp.message)}`;
+
+const navLinks = [
+  ["Overview", "#top"],
+  ["Amenities", "#amenities"],
+  ["Plans", "#plans"],
+  ["Gallery", "#gallery"],
+  ["Location", "#location"],
+] as const;
+
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  );
+}
+
 type Errors = Partial<Record<"name" | "email" | "phone", string>>;
 
 function Index() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,15 +90,25 @@ function Index() {
 
   return (
     <main>
-      <section className="relative min-h-[640px] h-[82svh] max-h-[900px]">
+      <header className="fixed inset-x-0 top-0 z-40 px-4 pt-4 lg:px-8">
+        <nav aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-2xl border border-border bg-background/80 px-4 py-3 shadow-lg shadow-black/20 backdrop-blur-md lg:px-6">
+          <a href="#top" className="text-xl font-semibold">assetz<span className="text-primary">.</span></a>
+          <div className="hidden items-center gap-7 text-sm md:flex">
+            {navLinks.map(([label, href]) => <a key={href} href={href} className="text-muted-foreground transition-colors hover:text-foreground">{label}</a>)}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" size="sm" className="hidden border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground sm:inline-flex"><a href="#enquire">Enquire now <ArrowUpRight /></a></Button>
+            <Button variant="outline" size="icon" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground md:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+              {menuOpen ? <X /> : <Menu />}
+            </Button>
+          </div>
+        </nav>
+      </header>
+      <section id="top" className="relative min-h-[640px] h-[82svh] max-h-[900px]">
         <img src={hero.url} alt="Assetz Codename Sublime residential towers and swimming pool — project rendering" className="absolute inset-0 h-full w-full object-cover" />
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-between px-6 py-7 lg:px-12 lg:py-9">
-          <header className="flex items-center justify-between gap-4">
-            <p className="text-xl font-semibold">assetz<span className="text-primary">.</span></p>
-            <Button asChild variant="outline" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground"><a href="#enquire">Enquire now <ArrowUpRight /></a></Button>
-          </header>
-          <div className="pb-8 lg:pb-12">
+        <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-10 pt-28 lg:px-12 lg:pb-14">
+          <div>
             <p className="mb-4 flex items-center gap-2 text-sm"><MapPin className="size-4 text-primary" /> At {project.location}</p>
             <h1 className="max-w-3xl font-display text-5xl font-light leading-[1.05] sm:text-7xl lg:text-8xl">Assetz Codename<br />Sublime</h1>
             <p className="mt-5 text-lg">Luxurious 3 BHK Apartments</p>
@@ -126,7 +162,7 @@ function Index() {
           )}
         </div>
       </section>
-      <section className="bg-card text-card-foreground">
+      <section id="amenities" className="bg-card text-card-foreground">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-20">
           <p className="section-label">A considered lifestyle</p><h2 className="section-title">Project amenities</h2>
           <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-7 md:grid-cols-4">
@@ -145,15 +181,33 @@ function Index() {
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">*Prices are indicative and subject to applicable charges, terms and availability. Please enquire for the latest pricing and cost sheet.</p>
         <Button asChild className="mt-6"><a href="#enquire">Request latest pricing <ArrowUpRight /></a></Button>
       </section>
-      <section className="bg-secondary">
+      <section id="gallery" className="bg-secondary">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-20"><p className="section-label">A closer look</p><h2 className="section-title">Project gallery</h2><div className="mt-9 grid gap-4 md:grid-cols-3">{[hero, gallery2, gallery3].map((image, i) => <Button key={image.url} variant="ghost" className="h-auto overflow-hidden rounded-none p-0" onClick={() => setSelectedImage({ url: image.url, label: `Assetz Codename Sublime — project view ${i + 1}` })} aria-label={`View project gallery image ${i + 1}`}><img src={image.url} loading="lazy" alt={`Assetz Codename Sublime project rendering ${i + 1}`} className="aspect-[4/3] w-full object-cover" /></Button>)}</div><p className="mt-4 text-xs text-muted-foreground">Project images and details from the supplied reference website. Images are illustrative project renderings.</p></div>
       </section>
-      <section className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:gap-24 lg:px-12 lg:py-24">
+      <section id="location" className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:gap-24 lg:px-12 lg:py-24">
         <div><p className="section-label">Everything within reach</p><h2 className="section-title">Location & connectivity</h2><p className="mt-6 flex items-center gap-2 text-primary"><MapPin className="size-5 shrink-0" /> Off Old Madras Road, Hoskote, East Bangalore</p><p className="mt-6 leading-relaxed text-muted-foreground">Convenient access to schools, healthcare, shopping destinations and employment hubs. Connected via Old Madras Road, Bengaluru–Tirupati Highway, Satellite Town Ring Road (STRR) and Kadapa–Bengaluru Highway.</p><p className="mt-5 leading-relaxed text-muted-foreground">Whitefield Railway Station and Whitefield (Kadugodi) Metro Station offer additional travel convenience.</p></div>
         <div><table className="w-full text-left text-sm"><thead className="border-b border-border text-primary"><tr><th className="pb-4 font-medium">Destination</th><th className="pb-4 text-right font-medium">Approx. drive time</th></tr></thead><tbody>{project.destinations.map(([name, time]) => <tr key={name} className="border-b border-border"><td className="py-3 pr-4">{name}</td><td className="whitespace-nowrap py-3 text-right text-muted-foreground">{time}</td></tr>)}</tbody></table><p className="mt-4 text-xs leading-relaxed text-muted-foreground">*Drive times are indicative and may vary with traffic conditions, route and time of day.</p></div>
       </section>
       <footer className="border-t border-border px-6 py-8"><div className="mx-auto max-w-7xl"><div className="flex flex-wrap items-center justify-between gap-4 text-sm"><p className="font-display text-2xl">Assetz Codename Sublime</p><Button asChild variant="link"><a href="#enquire">Register your interest <ArrowUpRight /></a></Button></div><p className="mt-5 text-xs leading-relaxed text-muted-foreground">Information reproduced from the supplied reference website; not an offer. The source lists project RERA registration as forthcoming. Confirm current registration, approvals and details with the sales team before making a purchase decision.</p></div></footer>
       {selectedImage && <div role="dialog" aria-modal="true" aria-label={selectedImage.label} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 p-6" onClick={() => setSelectedImage(null)}><Button variant="outline" size="icon" aria-label="Close image" autoFocus className="absolute right-5 top-5" onClick={() => setSelectedImage(null)} onKeyDown={(e) => { if (e.key === "Escape") setSelectedImage(null); }}><X /></Button><img src={selectedImage.url} alt={selectedImage.label} className="max-h-[80svh] max-w-full object-contain" /><p className="mt-4 text-sm">{selectedImage.label}</p></div>}
+      {menuOpen && (
+        <div role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-50 flex flex-col bg-background/95 p-6 backdrop-blur-md" onClick={() => setMenuOpen(false)}>
+          <div className="flex items-center justify-between">
+            <p className="text-xl font-semibold">assetz<span className="text-primary">.</span></p>
+            <Button variant="outline" size="icon" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground" aria-label="Close menu" autoFocus onClick={() => setMenuOpen(false)}><X /></Button>
+          </div>
+          <nav aria-label="Mobile navigation" className="mt-12 flex flex-col gap-6">
+            {navLinks.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="font-display text-4xl text-foreground">{label}</a>)}
+          </nav>
+          <div className="mt-auto space-y-3 pb-2">
+            <Button asChild className="h-12 w-full text-sm font-semibold"><a href="#enquire" onClick={() => setMenuOpen(false)}>Enquire now <ArrowUpRight /></a></Button>
+            <Button asChild variant="outline" className="h-12 w-full border-foreground/40 bg-transparent text-sm font-semibold text-foreground hover:bg-foreground/10 hover:text-foreground"><a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><WhatsAppIcon className="size-5" /> WhatsApp us</a></Button>
+          </div>
+        </div>
+      )}
+      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" className="fixed bottom-5 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-whatsapp text-whatsapp-foreground shadow-lg transition-transform hover:scale-105">
+        <WhatsAppIcon className="size-7" />
+      </a>
     </main>
   );
 }
