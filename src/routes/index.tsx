@@ -58,7 +58,7 @@ function Index() {
     }
   }
 
-  const field = "w-full border-b border-input bg-transparent py-3 text-card-foreground outline-none transition-colors placeholder:text-card-foreground/40 focus:border-primary";
+  const field = "w-full border-b border-border bg-transparent py-3 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
 
   return (
     <main>
@@ -96,7 +96,7 @@ function Index() {
           {status === "done" ? (
             <div className="py-10 text-center">
               <h2 className="font-display text-4xl">Thank you</h2>
-              <p className="mt-3 text-card-foreground/70">We've received your details and will be in touch soon.</p>
+               <p className="mt-3 text-muted-foreground">We've received your details and will be in touch soon.</p>
             </div>
           ) : (
             <>
