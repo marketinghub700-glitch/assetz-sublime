@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUpRight, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
 import hero from "@/assets/sublime-Gallery-1.webp.asset.json";
@@ -79,7 +79,9 @@ function Index() {
     setErrors({});
     setStatus("sending");
     try {
-      const { error } = await supabase.from("enquiries").insert(parsed.data);
+      const { error } = await leadsClient()
+        .from(LEADS_TABLE)
+        .insert({ ...parsed.data, project: LEAD_PROJECT, source: LEAD_SOURCE });
       setStatus(error ? "error" : "done");
     } catch {
       setStatus("error");
