@@ -4,14 +4,23 @@ import { z } from "zod";
 import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUpRight, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
-import hero from "@/assets/sublime-Gallery-1.webp.asset.json";
-import gallery2 from "@/assets/sublime-Gallery-2.webp.asset.json";
-import gallery3 from "@/assets/sublime-Gallery-3.webp.asset.json";
-import masterplan from "@/assets/sublime-Masterplan.webp.asset.json";
-import floorplan from "@/assets/sublime-3bhk_1735.webp.asset.json";
-import floorplan1926 from "@/assets/sublime-3bhk_1926.webp.asset.json";
-import floorplan1945 from "@/assets/sublime-3bhk_1945.webp.asset.json";
+import heroAsset from "@/assets/sublime-Gallery-1.webp.asset.json";
+import gallery2Asset from "@/assets/sublime-Gallery-2.webp.asset.json";
+import gallery3Asset from "@/assets/sublime-Gallery-3.webp.asset.json";
+import masterplanAsset from "@/assets/sublime-Masterplan.webp.asset.json";
+import floorplanAsset from "@/assets/sublime-3bhk_1735.webp.asset.json";
+import floorplan1926Asset from "@/assets/sublime-3bhk_1926.webp.asset.json";
+import floorplan1945Asset from "@/assets/sublime-3bhk_1945.webp.asset.json";
+import { hostedAsset } from "@/lib/assets";
 import { project } from "@/lib/project";
+
+const hero = hostedAsset(heroAsset);
+const gallery2 = hostedAsset(gallery2Asset);
+const gallery3 = hostedAsset(gallery3Asset);
+const masterplan = hostedAsset(masterplanAsset);
+const floorplan = hostedAsset(floorplanAsset);
+const floorplan1926 = hostedAsset(floorplan1926Asset);
+const floorplan1945 = hostedAsset(floorplan1945Asset);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,7 +30,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Assetz Codename Sublime — Hoskote, Bangalore" },
       { property: "og:description", content: "Premium 3 BHK residences from ₹1.84 Cr onwards. Discover plans, amenities and connectivity, and register your interest." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: hero.url },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: hero.url },
     ],
   }),
   component: Index,

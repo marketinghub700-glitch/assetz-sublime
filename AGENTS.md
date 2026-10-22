@@ -11,3 +11,4 @@
 
 - Keep source-derived project figures in `src/lib/project.ts` and test them separately so presentation changes cannot silently alter prices or development facts.
 - Serve downloaded reference-site media through Lovable Assets JSON pointers to keep binary media out of the repository.
+- Resolve Lovable Assets pointers through `src/lib/assets.ts` to the published Lovable image host so images work on external deployments without duplicating binary media.
