@@ -8,11 +8,12 @@ export const LEADS_TABLE = "assetz_sublime";
 export const LEAD_PROJECT = "Assetz Sublime";
 export const LEAD_SOURCE = "Google Ads";
 
-let client: ReturnType<typeof createClient> | undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let client: ReturnType<typeof createClient<any>> | undefined;
 
 export function leadsClient() {
   if (!client) {
-    client = createClient(LEADS_URL, LEADS_KEY, {
+    client = createClient<any>(LEADS_URL, LEADS_KEY, {
       auth: { persistSession: false, autoRefreshToken: false, storageKey: "leads-auth" },
       global: {
         fetch: (input, init) => {
