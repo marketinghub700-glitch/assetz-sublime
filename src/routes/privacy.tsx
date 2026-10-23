@@ -9,10 +9,8 @@ export const Route = createFileRoute("/privacy")({
       { property: "og:title", content: "Privacy Policy — Assetz Codename Sublime" },
       { property: "og:description", content: "How Billionaire Dream Estate Pvt Ltd collects, uses and protects your personal information." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://sublime-home-connections.lovable.app/privacy" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://sublime-home-connections.lovable.app/privacy" }],
   }),
   component: PrivacyPage,
 });

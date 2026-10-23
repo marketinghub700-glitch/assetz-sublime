@@ -9,10 +9,8 @@ export const Route = createFileRoute("/terms")({
       { property: "og:title", content: "Terms & Conditions — Assetz Codename Sublime" },
       { property: "og:description", content: "Terms governing the use of this website and the information published about Assetz Codename Sublime." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://sublime-home-connections.lovable.app/terms" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://sublime-home-connections.lovable.app/terms" }],
   }),
   component: TermsPage,
 });
