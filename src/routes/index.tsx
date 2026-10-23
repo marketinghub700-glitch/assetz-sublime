@@ -13,6 +13,7 @@ import floorplan1926Asset from "@/assets/sublime-3bhk_1926.webp.asset.json";
 import floorplan1945Asset from "@/assets/sublime-3bhk_1945.webp.asset.json";
 import { hostedAsset } from "@/lib/assets";
 import { project } from "@/lib/project";
+import { leadErrorMessage } from "@/lib/lead-errors";
 
 const hero = hostedAsset(heroAsset);
 const gallery2 = hostedAsset(gallery2Asset);
@@ -67,6 +68,7 @@ type Errors = Partial<Record<"name" | "email" | "phone", string>>;
 function Index() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [submissionError, setSubmissionError] = useState("");
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -88,13 +90,19 @@ function Index() {
       return;
     }
     setErrors({});
+    setSubmissionError("");
     setStatus("sending");
     try {
       const { error } = await leadsClient()
         .from(LEADS_TABLE)
         .insert({ ...parsed.data, project: LEAD_PROJECT, source: LEAD_SOURCE });
+      if (error) {
+        setSubmissionError(leadErrorMessage(error));
+        console.error("Enquiry save failed", { code: error.code });
+      }
       setStatus(error ? "error" : "done");
     } catch {
+      setSubmissionError(leadErrorMessage(null));
       setStatus("error");
     }
   }
@@ -165,7 +173,7 @@ function Index() {
                     {errors[n] && <p className="mt-1 text-sm text-destructive">{errors[n]}</p>}
                   </div>
                 ))}
-                {status === "error" && <p className="text-sm text-destructive">Something went wrong. Please try again.</p>}
+                {status === "error" && <p role="alert" className="text-sm text-destructive">{submissionError}</p>}
                  <Button type="submit" disabled={status === "sending"} className="h-12 w-full text-sm font-semibold">
                   {status === "sending" ? "Sending…" : "Submit enquiry"}
                    <ArrowUpRight />
