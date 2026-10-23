@@ -15,3 +15,4 @@
 - Serve downloaded reference-site media through Lovable Assets JSON pointers to keep binary media out of the repository.
 - Resolve Lovable Assets pointers through `src/lib/assets.ts` to the published Lovable image host so images work on external deployments without duplicating binary media.
 - Keep error handling limited to standard logging and recovery screens, without optional platform-specific browser reporting hooks, to avoid unnecessary attribution and telemetry.
+- Map lead-service failures through `src/lib/lead-errors.ts` and log only error codes, so failed saves are diagnosable without exposing visitor data or raw service details.
