@@ -23,7 +23,7 @@ const sections: [string, string[]][] = [
   ["Information is indicative", [
     "All project details on this website — including prices, sizes, floor plans, amenities, availability and connectivity/drive times — are reproduced from publicly available promotional material and are indicative only. Images are illustrative project renderings and not photographs of the actual site.",
     "Nothing on this website constitutes an offer, contract, commitment or guarantee of any kind. Prices are subject to applicable charges, terms and availability and may change without notice.",
-    "The source material lists the project's RERA registration as forthcoming. Before making any purchase decision, please confirm the current RERA registration number, approvals, plans, specifications and cost sheet directly with the project's sales team and verify them independently.",
+    "The project's RERA registration number and Billionaire Dream Estate's agent RERA registration number are shown in the footer of this website. Before making any purchase decision, please confirm the current registration, approvals, plans, specifications and cost sheet directly with the project's sales team and verify them independently.",
   ]],
   ["Enquiries and communication", [
     "When you submit the enquiry form or contact us on WhatsApp, you consent to being contacted by our team by phone, email or WhatsApp regarding Assetz Codename Sublime. You can ask us to stop at any time — see our Privacy Policy.",
