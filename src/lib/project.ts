@@ -11,6 +11,9 @@ export const project = {
     project: "PRM/KA/RERA/1250/304/PR/081026/009004",
     agent: "PRM/KA/RERA/1251/446/AG/250514/005727",
   },
+  // Footer disclaimer supplied by the owner.
+  disclaimer:
+    "Disclaimer: This website is owned and operated by Billionaire Dream Estate Pvt Ltd, an authorized channel partner of Assetz Property Group. We are not the official website of the developer. All content, including images, floor plans, pricing, and project details, are provided for informational and marketing purposes only. While we strive to ensure accuracy, we do not guarantee completeness or correctness. Users are advised to verify all details directly with the developer.",
   startingPrice: "₹1.73 Cr* Onwards",
   acres: 11,
   clubhouseSqFt: 62000,

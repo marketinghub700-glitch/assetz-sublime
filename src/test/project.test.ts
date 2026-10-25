@@ -28,4 +28,13 @@ describe("Source project details", () => {
     expect(project.rera.project).toBe("PRM/KA/RERA/1250/304/PR/081026/009004");
     expect(project.rera.agent).toBe("PRM/KA/RERA/1251/446/AG/250514/005727");
   });
+  it("shows the owner's channel-partner disclaimer", () => {
+    expect(project.disclaimer).toContain(
+      "an authorized channel partner of Assetz Property Group",
+    );
+    expect(project.disclaimer).toContain("We are not the official website of the developer.");
+    expect(project.disclaimer).toContain(
+      "Users are advised to verify all details directly with the developer.",
+    );
+  });
 });
