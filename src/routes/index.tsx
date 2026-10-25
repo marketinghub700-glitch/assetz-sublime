@@ -3,7 +3,8 @@ import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
 import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUpRight, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ArrowDown, ArrowUpRight, Download, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
 import heroAsset from "@/assets/sublime-Gallery-1.webp.asset.json";
 import gallery2Asset from "@/assets/sublime-Gallery-2.webp.asset.json";
 import gallery3Asset from "@/assets/sublime-Gallery-3.webp.asset.json";
@@ -27,9 +28,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Assetz Codename Sublime — 3 BHK Apartments in Hoskote" },
-      { name: "description", content: "Explore Assetz Codename Sublime in Hoskote, Bangalore. Premium 3 BHK apartments from ₹1.84 Cr onwards, 11 acres and a 62,000+ sq. ft. clubhouse." },
+      { name: "description", content: "Explore Assetz Codename Sublime in Hoskote, Bangalore. Premium 3 BHK apartments from ₹1.73 Cr onwards, 11 acres and a 62,000+ sq. ft. clubhouse." },
       { property: "og:title", content: "Assetz Codename Sublime — Hoskote, Bangalore" },
-      { property: "og:description", content: "Premium 3 BHK residences from ₹1.84 Cr onwards. Discover plans, amenities and connectivity, and register your interest." },
+      { property: "og:description", content: "Premium 3 BHK residences from ₹1.73 Cr onwards. Discover plans, amenities and connectivity, and register your interest." },
       { property: "og:type", content: "website" },
       { property: "og:image", content: hero.url },
       { name: "twitter:card", content: "summary_large_image" },
@@ -71,6 +72,7 @@ function Index() {
   const [submissionError, setSubmissionError] = useState("");
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [downloadPlan, setDownloadPlan] = useState<{ url: string; label: string } | null>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -108,6 +110,34 @@ function Index() {
   }
 
   const field = "w-full border-b border-border bg-transparent py-3 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
+
+  const enquiryForm = (prefix: string) => (
+              <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
+                {([
+                  ["name", "Full name", "text", "name"],
+                  ["email", "Email address", "email", "email"],
+                  ["phone", "Phone number", "tel", "tel"],
+                ] as const).map(([n, label, type, ac]) => (
+                  <div key={n}>
+                    <label htmlFor={`${prefix}-${n}`} className="sr-only">{label}</label>
+                    <input id={`${prefix}-${n}`} name={n} type={type} autoComplete={ac} placeholder={label} maxLength={n === "phone" ? 20 : 255} className={field} />
+                    {errors[n] && <p className="mt-1 text-sm text-destructive">{errors[n]}</p>}
+                  </div>
+                ))}
+                {status === "error" && <p role="alert" className="text-sm text-destructive">{submissionError}</p>}
+                 <Button type="submit" disabled={status === "sending"} className="h-12 w-full text-sm font-semibold">
+                  {status === "sending" ? "Sending…" : "Submit enquiry"}
+                   <ArrowUpRight />
+                 </Button>
+              </form>
+  );
+
+  function openPlanEnquiry(plan: { url: string; label: string }) {
+    setErrors({});
+    setSubmissionError("");
+    setStatus("idle");
+    setDownloadPlan(plan);
+  }
 
   return (
     <main>
@@ -161,24 +191,7 @@ function Index() {
             <>
               <p className="text-xs uppercase tracking-[0.3em] text-gold">Register interest</p>
                <h2 className="mt-2 font-display text-4xl">Request more information</h2>
-              <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
-                {([
-                  ["name", "Full name", "text", "name"],
-                  ["email", "Email address", "email", "email"],
-                  ["phone", "Phone number", "tel", "tel"],
-                ] as const).map(([n, label, type, ac]) => (
-                  <div key={n}>
-                    <label htmlFor={n} className="sr-only">{label}</label>
-                    <input id={n} name={n} type={type} autoComplete={ac} placeholder={label} maxLength={n === "phone" ? 20 : 255} className={field} />
-                    {errors[n] && <p className="mt-1 text-sm text-destructive">{errors[n]}</p>}
-                  </div>
-                ))}
-                {status === "error" && <p role="alert" className="text-sm text-destructive">{submissionError}</p>}
-                 <Button type="submit" disabled={status === "sending"} className="h-12 w-full text-sm font-semibold">
-                  {status === "sending" ? "Sending…" : "Submit enquiry"}
-                   <ArrowUpRight />
-                 </Button>
-              </form>
+              {enquiryForm("page")}
             </>
           )}
         </div>
@@ -195,7 +208,7 @@ function Index() {
       <section id="plans" className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-24">
         <p className="section-label">Space to call your own</p><h2 className="section-title">Master & floor plans</h2>
         <div className="mt-10 grid gap-8 md:grid-cols-2">
-          {[{ url: masterplan.url, label: "Master plan" }, { url: floorplan.url, label: "3 BHK · 1,735 sq. ft." }, { url: floorplan1926.url, label: "3 BHK · 1,926 sq. ft." }, { url: floorplan1945.url, label: "3 BHK · 1,945 sq. ft." }].map((plan) => <div key={plan.label}><Button variant="ghost" className="h-auto w-full overflow-hidden rounded-none bg-card p-0 hover:bg-card" onClick={() => setSelectedImage(plan)} aria-label={`View ${plan.label}`}><img src={plan.url} alt={plan.label} loading="lazy" className="aspect-[4/3] w-full object-contain p-3" /></Button><p className="mt-4 flex justify-between text-sm">{plan.label}<ArrowUpRight className="size-4 text-primary" /></p></div>)}
+          {[{ url: masterplan.url, label: "Master plan" }, { url: floorplan.url, label: "3 BHK · 1,735 sq. ft." }, { url: floorplan1926.url, label: "3 BHK · 1,926 sq. ft." }, { url: floorplan1945.url, label: "3 BHK · 1,945 sq. ft." }].map((plan) => <div key={plan.label}><Button variant="ghost" className="h-auto w-full overflow-hidden rounded-none bg-card p-0 hover:bg-card" onClick={() => openPlanEnquiry(plan)} aria-label={`Request ${plan.label}`}><img src={plan.url} alt={plan.label} loading="lazy" className="aspect-[4/3] w-full object-contain p-3 blur-[1.5px]" /></Button><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><p className="text-sm">{plan.label}</p><Button variant="outline" size="sm" onClick={() => openPlanEnquiry(plan)} aria-label={`Download ${plan.label}`}><Download className="size-4" />Download</Button></div></div>)}
         </div>
         <h3 className="mt-14 font-display text-3xl">Apartment price</h3>
         <div className="mt-6 overflow-x-auto"><table className="w-full min-w-[540px] text-left text-sm"><thead className="border-b border-primary/40 text-primary"><tr><th className="py-4 font-medium">Configuration</th><th className="py-4 font-medium">Saleable area</th><th className="py-4 font-medium">Indicative price</th></tr></thead><tbody>{project.homes.map((home) => <tr key={home.area} className="border-b border-border"><td className="py-5 pr-4">3 BHK + 3T</td><td className="py-5 pr-4">{home.area.toLocaleString("en-IN")} Sq. Ft.</td><td className="py-5">{home.price}</td></tr>)}</tbody></table></div>
@@ -211,6 +224,20 @@ function Index() {
       </section>
       <footer className="border-t border-border px-6 py-8"><div className="mx-auto max-w-7xl"><div className="flex flex-wrap items-center justify-between gap-4 text-sm"><p className="font-display text-2xl">Assetz Codename Sublime</p><div className="flex flex-wrap items-center gap-5"><Button asChild variant="link"><a href="#enquire">Register your interest <ArrowUpRight /></a></Button><Link to="/privacy" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">Privacy Policy</Link><Link to="/terms" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">Terms &amp; Conditions</Link></div></div><p className="mt-5 text-xs leading-relaxed text-muted-foreground">Marketed by Billionaire Dream Estate Pvt Ltd. Information reproduced from the supplied reference website; not an offer. The source lists project RERA registration as forthcoming. Confirm current registration, approvals and details with the sales team before making a purchase decision.</p></div></footer>
       {selectedImage && <div role="dialog" aria-modal="true" aria-label={selectedImage.label} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 p-6" onClick={() => setSelectedImage(null)}><Button variant="outline" size="icon" aria-label="Close image" autoFocus className="absolute right-5 top-5" onClick={() => setSelectedImage(null)} onKeyDown={(e) => { if (e.key === "Escape") setSelectedImage(null); }}><X /></Button><img src={selectedImage.url} alt={selectedImage.label} className="max-h-[80svh] max-w-full object-contain" /><p className="mt-4 text-sm">{selectedImage.label}</p></div>}
+      <Dialog open={Boolean(downloadPlan)} onOpenChange={(open) => { if (!open) setDownloadPlan(null); }}>
+        <DialogContent className="max-h-[90svh] w-[calc(100%-2rem)] overflow-y-auto rounded-lg">
+          <DialogHeader>
+            <DialogTitle className="pr-6 font-display text-3xl font-normal tracking-normal">{status === "done" ? "Thank you" : "Request your plan"}</DialogTitle>
+            <DialogDescription>{downloadPlan?.label}</DialogDescription>
+          </DialogHeader>
+          {status === "done" ? (
+            <div className="space-y-5">
+              <p className="text-sm text-muted-foreground">We've received your details.</p>
+              {downloadPlan && <Button asChild className="w-full"><a href={downloadPlan.url} target="_blank" rel="noopener noreferrer" download><Download />Download plan</a></Button>}
+            </div>
+          ) : enquiryForm("plan")}
+        </DialogContent>
+      </Dialog>
       {menuOpen && (
         <div role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-50 flex flex-col bg-background/95 p-6 backdrop-blur-md" onClick={() => setMenuOpen(false)}>
           <div className="flex items-center justify-between">
