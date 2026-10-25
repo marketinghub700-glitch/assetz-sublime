@@ -143,7 +143,7 @@ function Index() {
     <main>
       <header className="fixed inset-x-0 top-0 z-40 px-4 pt-4 lg:px-8">
         <nav aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-2xl border border-border bg-background/80 px-4 py-3 shadow-lg shadow-black/20 backdrop-blur-md lg:px-6">
-          <a href="#top" className="text-xl font-semibold">assetz<span className="text-primary">.</span></a>
+          <a href="#top" className="text-xl font-semibold">Assetz<span className="text-primary">.</span></a>
           <div className="hidden items-center gap-7 text-sm md:flex">
             {navLinks.map(([label, href]) => <a key={href} href={href} className="text-muted-foreground transition-colors hover:text-foreground">{label}</a>)}
           </div>
@@ -241,7 +241,7 @@ function Index() {
       {menuOpen && (
         <div role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-50 flex flex-col bg-background/95 p-6 backdrop-blur-md" onClick={() => setMenuOpen(false)}>
           <div className="flex items-center justify-between">
-            <p className="text-xl font-semibold">assetz<span className="text-primary">.</span></p>
+            <p className="text-xl font-semibold">Assetz<span className="text-primary">.</span></p>
             <Button variant="outline" size="icon" className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground" aria-label="Close menu" autoFocus onClick={() => setMenuOpen(false)}><X /></Button>
           </div>
           <nav aria-label="Mobile navigation" className="mt-12 flex flex-col gap-6">
