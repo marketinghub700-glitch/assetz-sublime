@@ -24,4 +24,8 @@ describe("Source project details", () => {
     expect(project.whatsapp.phone).toBe("919071371005");
     expect(project.whatsapp.message).toContain("Assetz Codename Sublime");
   });
+  it("shows the owner's RERA registration numbers", () => {
+    expect(project.rera.project).toBe("PRM/KA/RERA/1250/304/PR/081026/009004");
+    expect(project.rera.agent).toBe("PRM/KA/RERA/1251/446/AG/250514/005727");
+  });
 });

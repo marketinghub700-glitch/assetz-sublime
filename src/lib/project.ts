@@ -6,6 +6,11 @@ export const project = {
     phone: "919071371005",
     message: "Hi, I'm interested in Assetz Codename Sublime. Please share more details.",
   },
+  // RERA registration numbers supplied by the owner.
+  rera: {
+    project: "PRM/KA/RERA/1250/304/PR/081026/009004",
+    agent: "PRM/KA/RERA/1251/446/AG/250514/005727",
+  },
   startingPrice: "₹1.73 Cr* Onwards",
   acres: 11,
   clubhouseSqFt: 62000,
