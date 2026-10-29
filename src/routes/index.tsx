@@ -98,7 +98,7 @@ function Index() {
     try {
       const { error } = await leadsClient()
         .from(LEADS_TABLE)
-        .insert({ ...parsed.data, project: LEAD_PROJECT, source: LEAD_SOURCE });
+        .insert({ ...parsed.data, project_name: LEAD_PROJECT, source: LEAD_SOURCE });
       if (error) {
         setSubmissionError(leadErrorMessage(error));
         console.error("Enquiry save failed", { code: error.code });
