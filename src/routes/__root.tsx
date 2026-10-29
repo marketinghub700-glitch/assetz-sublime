@@ -8,7 +8,9 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+
+import { initGtag } from "../lib/gtag";
 
 import appCss from "../styles.css?url";
 
@@ -110,6 +112,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void initGtag();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

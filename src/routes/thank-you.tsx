@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Download } from "lucide-react";
+import { trackLeadConversion } from "@/lib/gtag";
 
 const validateSearch = (search: Record<string, unknown>): { plan?: string | undefined; label?: string | undefined } => ({
   plan: typeof search["plan"] === "string" ? search["plan"] : undefined,
@@ -25,6 +27,10 @@ export const Route = createFileRoute("/thank-you")({
 
 function ThankYouPage() {
   const { plan, label } = Route.useSearch();
+
+  useEffect(() => {
+    void trackLeadConversion();
+  }, []);
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6">
