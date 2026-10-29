@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Download } from "lucide-react";
 
-const validateSearch = (search: Record<string, unknown>): { plan?: string; label?: string } => ({
+const validateSearch = (search: Record<string, unknown>): { plan?: string | undefined; label?: string | undefined } => ({
   plan: typeof search["plan"] === "string" ? search["plan"] : undefined,
   label: typeof search["label"] === "string" ? search["label"] : undefined,
 });
