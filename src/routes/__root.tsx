@@ -8,7 +8,9 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+
+import { initGtag } from "../lib/gtag";
 
 import appCss from "../styles.css?url";
 
@@ -87,18 +89,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", type: "image/png", href: "/favicon.png" },
     ],
-    scripts: [
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=AW-18063086765",
-        async: true,
-      },
-      {
-        children: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'AW-18063086765');`,
-      },
-    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -122,6 +112,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void initGtag();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

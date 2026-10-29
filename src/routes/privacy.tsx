@@ -24,6 +24,7 @@ const sections: [string, string[]][] = [
     "Enquiry form details: when you submit the enquiry form we collect the name, email address and phone number you provide, so that our sales team can contact you about the project.",
     "Contact via WhatsApp: if you choose to message us on WhatsApp, we receive your phone number and whatever you choose to share in that conversation.",
     "Usage information: like most websites, our hosting provider may collect standard technical information such as IP address, browser type and pages visited, used only for operating and securing the site.",
+    "Advertising measurement: we use Google Ads conversion tracking (Google) to measure whether visitors who arrive from our advertisements submit an enquiry. This may set or read advertising cookies and share page-visit and conversion information with Google for measurement and ad optimization. In regions that require consent for this tracking, it is switched off.",
     "We do not collect payment details, identity documents or sensitive personal information through this website.",
   ]],
   ["How we use your information", [
