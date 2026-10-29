@@ -67,6 +67,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 type Errors = Partial<Record<"name" | "email" | "phone", string>>;
 
 function Index() {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [submissionError, setSubmissionError] = useState("");
