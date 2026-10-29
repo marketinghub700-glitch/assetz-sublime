@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
 import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
