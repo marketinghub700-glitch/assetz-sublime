@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
 import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
@@ -67,6 +67,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 type Errors = Partial<Record<"name" | "email" | "phone", string>>;
 
 function Index() {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [submissionError, setSubmissionError] = useState("");
@@ -101,8 +102,11 @@ function Index() {
       if (error) {
         setSubmissionError(leadErrorMessage(error));
         console.error("Enquiry save failed", { code: error.code });
+        setStatus("error");
+        return;
       }
-      setStatus(error ? "error" : "done");
+      setStatus("done");
+      navigate({ to: "/thank-you", search: downloadPlan ? { plan: downloadPlan.url, label: downloadPlan.label } : {} });
     } catch {
       setSubmissionError(leadErrorMessage(null));
       setStatus("error");
