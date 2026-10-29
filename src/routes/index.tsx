@@ -102,8 +102,11 @@ function Index() {
       if (error) {
         setSubmissionError(leadErrorMessage(error));
         console.error("Enquiry save failed", { code: error.code });
+        setStatus("error");
+        return;
       }
-      setStatus(error ? "error" : "done");
+      setStatus("done");
+      navigate({ to: "/thank-you", search: downloadPlan ? { plan: downloadPlan.url, label: downloadPlan.label } : {} });
     } catch {
       setSubmissionError(leadErrorMessage(null));
       setStatus("error");
