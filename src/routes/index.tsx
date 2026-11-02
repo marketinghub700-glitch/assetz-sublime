@@ -105,6 +105,12 @@ function Index() {
         setStatus("error");
         return;
       }
+      // Deliver the enquiry to the CRM as well; a CRM failure must not block the lead.
+      fetch(CRM_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...parsed.data, project_name: LEAD_PROJECT, source: LEAD_SOURCE }),
+      }).catch((crmError) => console.error("CRM delivery failed", { message: String(crmError) }));
       setStatus("done");
       navigate({ to: "/thank-you", search: downloadPlan ? { plan: downloadPlan.url, label: downloadPlan.label } : {} });
     } catch {
