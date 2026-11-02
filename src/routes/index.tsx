@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, type FormEvent } from "react";
 import { z } from "zod";
-import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE } from "@/integrations/leads/client";
+import { leadsClient, LEADS_TABLE, LEAD_PROJECT, LEAD_SOURCE, CRM_WEBHOOK_URL } from "@/integrations/leads/client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowDown, ArrowUpRight, Download, MapPin, Waves, Dumbbell, Trees, Users, Footprints, ShieldCheck, Building2, Menu, X } from "lucide-react";
@@ -105,6 +105,12 @@ function Index() {
         setStatus("error");
         return;
       }
+      // Deliver the enquiry to the CRM as well; a CRM failure must not block the lead.
+      fetch(CRM_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...parsed.data, project_name: LEAD_PROJECT, source: LEAD_SOURCE }),
+      }).catch((crmError) => console.error("CRM delivery failed", { message: String(crmError) }));
       setStatus("done");
       navigate({ to: "/thank-you", search: downloadPlan ? { plan: downloadPlan.url, label: downloadPlan.label } : {} });
     } catch {
